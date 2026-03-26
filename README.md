@@ -43,6 +43,8 @@ AuthLab emphasizes prevention and mitigation strategies:
 - Educate users on social engineering tactics  
 
 ---
+## Status
+This project is actively maintained and aligned with modern authentication flows for educational and research purposes.
 
 ## Getting Started
 
