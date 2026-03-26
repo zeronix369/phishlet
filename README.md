@@ -47,6 +47,7 @@ AuthLab emphasizes prevention and mitigation strategies:
 ## Getting Started
 
 ```bash
-git clone https://github.com/zeronix369/authlab.git
-cd authlab
+git clone https://github.com/zeronix369/phishlet.git
+cd phishlet
+
 
