@@ -24,7 +24,7 @@ The project is designed to provide insight into **social engineering techniques*
 
 ---
 
-## 🧪 Research Scope
+##  Research Scope
 This project focuses on:
 - Human-factor vulnerabilities in authentication systems  
 - UI/UX-based deception techniques  
