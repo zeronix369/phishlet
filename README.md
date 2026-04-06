@@ -29,7 +29,8 @@ This project focuses on:
 - Human-factor vulnerabilities in authentication systems  
 - UI/UX-based deception techniques  
 - Behavioral patterns in login interactions  
-- Awareness-driven security improvements  
+- Awareness-driven security improvements
+- Used in Evilginx2
 
 ---
 
