@@ -30,7 +30,7 @@ This project focuses on:
 - UI/UX-based deception techniques  
 - Behavioral patterns in login interactions  
 - Awareness-driven security improvements
-- Used in Evilginx2
+
 
 ---
 
